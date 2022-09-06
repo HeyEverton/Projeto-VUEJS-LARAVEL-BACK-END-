@@ -59,7 +59,7 @@ Route::prefix('bookshelf')->name('bookshelf.')->group(function() {
     Route::middleware('auth:api')->get('auth/logout', [AuthController::class, 'logout']); //LOGOUT USER
     Route::middleware('auth:api')->get('auth/me', [AuthController::class, 'me']); //USER PROFILE
 
-    Route::middleware('auth:api')->post('/user/create', [AuthController::class, 'create']); //CREATE USER
+    Route::middleware('auth:api')->post('user/create', [AuthController::class, 'create']); //CREATE USER
     Route::middleware('auth:api')->get('users', [AuthController::class, 'index']); // GET ALL USERS
     Route::middleware('auth:api')->get('users/{id}', [AuthController::class, 'show']); // GET ONE USER/ GET ONE USER
     Route::middleware('auth:api')->put('users/{id}', [AuthController::class, 'update']); // GET ONE USER

@@ -128,20 +128,23 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $array = [
-            'error' => ''
-        ];
-        $creds = $request->only('email', 'password');
+        try {
+            $creds = $request->only('email', 'password');
+    
+            $token = Auth::attempt($creds);
+    
+            if ($token) {
+                $array['token'] = $token;
+            } else {
+                $array['error'] = 'E-mail e/ou senha incorretos.';
+            }
+            return $array;
 
-        $token = Auth::attempt($creds);
-
-        if ($token) {
-            $array['token'] = $token;
-        } else {
-            $array['error'] = 'E-mail e/ou senha incorretos.';
+        } catch (\Exception $e) {
+            $message = new ApiMessages($e->getMessage());
+            return response()->json($message->getMessage(), 401);
         }
 
-        return $array;
     }
 
     public function logout(Request $request)
