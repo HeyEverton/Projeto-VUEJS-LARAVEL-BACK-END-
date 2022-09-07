@@ -18,7 +18,27 @@ class AuthController extends Controller
 
     public function index()
     {
-        $users = $this->user->paginate(10);
+        $users = $this->user->paginate();
+
+        return response()->json($users, 200);
+    }
+
+    public function pesquisaUsuarioPorNome($name)
+    {
+
+        $users = $this->user->select()
+            ->where('name', 'like', '%' . $name . '%')
+            ->paginate();
+
+        return response()->json($users, 200);
+    }
+
+    public function pesquisaUsuarioPorEmail($email)
+    {
+
+        $users = $this->user->select()
+            ->where('email', 'like', '%' . $email . '%')
+            ->paginate();
 
         return response()->json($users, 200);
     }

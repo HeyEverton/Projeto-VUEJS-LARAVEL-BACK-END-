@@ -61,6 +61,9 @@ Route::prefix('bookshelf')->name('bookshelf.')->group(function() {
 
     Route::middleware('auth:api')->post('user/create', [AuthController::class, 'create']); //CREATE USER
     Route::middleware('auth:api')->get('users', [AuthController::class, 'index']); // GET ALL USERS
+    Route::middleware('auth:api')->get('users/pesquisar/nome/{name}', [AuthController::class, 'pesquisaUsuarioPorNome']); // GET USERS FILTER
+    Route::middleware('auth:api')->get('users/pesquisar/email/{email}', [AuthController::class, 'pesquisaUsuarioPorEmail']); // GET USERS FILTER
+
     Route::middleware('auth:api')->get('users/{id}', [AuthController::class, 'show']); // GET ONE USER/ GET ONE USER
     Route::middleware('auth:api')->put('users/{id}', [AuthController::class, 'update']); // GET ONE USER
     Route::middleware('auth:api')->delete('users/{id}', [AuthController::class, 'destroy']); // GET ONE USER
