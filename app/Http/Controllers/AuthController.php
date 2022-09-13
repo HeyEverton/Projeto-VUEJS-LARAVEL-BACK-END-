@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Api\ApiMessages;
+use App\Http\Requests\AuthLoginRequest;
+use App\Http\Resources\UserResource;
 use App\Models\User;
+use App\Services\AuthService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
@@ -12,7 +15,7 @@ use Illuminate\Support\Facades\Hash;
 class AuthController extends Controller
 {
 
-    public function __construct(private User $user)
+    public function __construct(private User $user, private AuthService $authService)
     {
     }
 
@@ -146,25 +149,14 @@ class AuthController extends Controller
     }
 
 
-    public function login(Request $request)
+    public function login(AuthLoginRequest $request)
     {
-        try {
-            $creds = $request->only('email', 'password');
-    
-            $token = Auth::attempt($creds);
-    
-            if ($token) {
-                $array['token'] = $token;
-            } else {
-                $array['error'] = 'E-mail e/ou senha incorretos.';
-            }
-            return $array;
 
-        } catch (\Exception $e) {
-            $message = new ApiMessages($e->getMessage());
-            return response()->json($message->getMessage(), 401);
-        }
+        $input = $request->validated();
+        $token = $this->authService
+            ->login($input['email'], $input['password']);
 
+        return (new UserResource(auth()->user()))->additional($token);
     }
 
     public function logout(Request $request)
@@ -173,22 +165,11 @@ class AuthController extends Controller
 
         Auth::logout();
 
-        // $user = $request->user();
-
-        // $user->tokens()->delete();
-
-
         return $array;
     }
 
     public function me()
     {
-        $array = ['error' => ''];
-
-        $user = Auth::user();
-
-        $array['email'] = $user->email;
-
-        return $array;
+        return new UserResource(auth()->user());
     }
 }
