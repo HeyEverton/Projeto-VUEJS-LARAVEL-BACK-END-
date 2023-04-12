@@ -52,7 +52,6 @@ class BookController extends Controller
                 $book->authors()->sync($data['authors']);
             }
 
-
             return  response()->json([
                 'data' => [
                     'msg' => 'Livro cadastrado com sucesso'
